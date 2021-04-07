@@ -23,7 +23,7 @@ jobs:
           name: artifacts
           path: artifacts
       - run: |
-          ls -Ra artifacts
+          ls -Ra .
           curl -sL "https://raw.githubusercontent.com/jmatsu/transart/master/install.bash" | bash
           ./transart upload
         working-directory: artifacts
