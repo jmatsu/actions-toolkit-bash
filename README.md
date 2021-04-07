@@ -32,8 +32,6 @@ https://docs.github.com/en/actions/reference/workflow-commands-for-github-action
 
 ## set-env `<name>` `<value>`
 
-alias: export-env
-
 > <name> is required even when using the pipe
 
 https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable
@@ -45,8 +43,6 @@ https://docs.github.com/en/actions/reference/workflow-commands-for-github-action
 https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
 
 ## set-secret `<value>`
-
-alias: add-mask
 
 https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#masking-a-value-in-log
 
