@@ -44,7 +44,7 @@ https://docs.github.com/en/actions/reference/workflow-commands-for-github-action
 
 https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
 
-## set-secret <value>
+## set-secret `<value>`
 
 alias: add-mask
 
