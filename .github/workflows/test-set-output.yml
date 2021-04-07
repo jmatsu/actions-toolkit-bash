@@ -1,0 +1,150 @@
+name: 'test set-output command'
+on:
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-set-output.yml'
+      - 'src/set-output'
+      - 'src/gh_actions_command'
+      - 'fixtures/*'
+
+jobs:
+  set-output:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "$PWD/src" >> $GITHUB_PATH
+      - id: actions-core
+        uses: ./.github/actions/actions-core-behavior
+        with:
+          single_line_file_path: ${{ github.workspace }}/fixtures/single-line.txt
+          single_line_wo_newline_file_path: ${{ github.workspace }}/fixtures/single-line-wo-newline.txt
+          multiple_lines_file_path: ${{ github.workspace }}/fixtures/multiple-lines.txt
+          multiple_lines_wo_newline_file_path: ${{ github.workspace }}/fixtures/multiple-lines-wo-newline.txt
+      - id: toolkit
+        run: |
+          set-output "argument-single-line" "$(cat fixtures/single-line.txt)"
+          cat fixtures/single-line.txt | set-output "pipe-single-line"
+          INCLUDE_EOL_AT_EOF=0 set-output "argument-eol-single-line" "$(cat fixtures/single-line.txt)"
+          cat fixtures/single-line.txt | INCLUDE_EOL_AT_EOF=0 set-output "pipe-eol-single-line"
+
+          set-output "argument-single-line-wo-newline" "$(cat fixtures/single-line-wo-newline.txt)"
+          cat fixtures/single-line-wo-newline.txt | set-output "pipe-single-line-wo-newline"
+
+          set-output "argument-multiple-lines" "$(cat fixtures/multiple-lines.txt)"
+          cat fixtures/multiple-lines.txt | set-output "pipe-multiple-lines"
+          INCLUDE_EOL_AT_EOF=0 set-output "argument-eol-multiple-lines" "$(cat fixtures/multiple-lines.txt)"
+          cat fixtures/multiple-lines.txt | INCLUDE_EOL_AT_EOF=0 set-output "pipe-eol-multiple-lines"
+
+          set-output "argument-multiple-lines-wo-newline" "$(cat fixtures/multiple-lines-wo-newline.txt)"
+          cat fixtures/multiple-lines-wo-newline.txt | set-output "pipe-multiple-lines-wo-newline"
+      - name: single-line
+        id: single-line
+        run: |
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.single-line }}")" == "${{ steps.toolkit.outputs.argument-single-line }}" ]]; then
+            echo "argument-single-line works"
+          else
+            echo "::error::argument-single-line case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.single-line }}" == "${{ steps.toolkit.outputs.argument-eol-single-line }}" ]]; then
+            echo "argument-eol-single-line works"
+          else
+            echo "::error::argument-eol-single-line case seems to be broken"
+            status=1
+          fi
+
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.single-line }}")" == "${{ steps.toolkit.outputs.pipe-single-line }}" ]]; then
+            echo "pipe-single-line works"
+          else
+            echo "::error::pipe-single-line case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.single-line }}" == "${{ steps.toolkit.outputs.pipe-eol-single-line }}" ]]; then
+            echo "pipe-eol-single-line works"
+          else
+            echo "::error::pipe-eol-single-line case seems to be broken"
+            status=1
+          fi
+
+          echo "::set-output name=status::${status:-0}"
+      - name: single-line-wo-newline
+        id: single-line-wo-newline
+        run: |
+          if [[ "${{ steps.actions-core.outputs.single-line-wo-newline }}" == "${{ steps.toolkit.outputs.argument-single-line-wo-newline }}" ]]; then
+            echo "argument-single-line-wo-newline works"
+          else
+            echo "::error::argument-single-line-wo-newline case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.single-line-wo-newline }}" == "${{ steps.toolkit.outputs.pipe-single-line-wo-newline }}" ]]; then
+            echo "pipe-single-line-wo-newline works"
+          else
+            echo "::error::pipe-single-line-wo-newline case seems to be broken"
+            status=1
+          fi
+
+          echo "::set-output name=status::${status:-0}"
+      - name: multiple-lines
+        id: multiple-lines
+        run: |
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.multiple-lines }}")" == "${{ steps.toolkit.outputs.argument-multiple-lines }}" ]]; then
+            echo "argument-multiple-lines works"
+          else
+            echo "::error::argument-multiple-lines case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.multiple-lines }}" == "${{ steps.toolkit.outputs.argument-eol-multiple-lines }}" ]]; then
+            echo "argument-eol-multiple-lines works"
+          else
+            echo "::error::argument-eol-multiple-lines case seems to be broken"
+            status=1
+          fi
+
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.multiple-lines }}")" == "${{ steps.toolkit.outputs.pipe-multiple-lines }}" ]]; then
+            echo "pipe-multiple-lines works"
+          else
+            echo "::error::pipe-multiple-lines case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.multiple-lines }}" == "${{ steps.toolkit.outputs.pipe-eol-multiple-lines }}" ]]; then
+            echo "pipe-eol-multiple-lines works"
+          else
+            echo "::error::pipe-eol-multiple-lines case seems to be broken"
+            status=1
+          fi
+
+          echo "::set-output name=status::${status:-0}"
+      - name: multiple-lines-wo-newline
+        id: multiple-lines-wo-newline
+        run: |
+          if [[ "${{ steps.actions-core.outputs.multiple-lines-wo-newline }}" == "${{ steps.toolkit.outputs.argument-multiple-lines-wo-newline }}" ]]; then
+            echo "argument-multiple-lines-wo-newline works"
+          else
+            echo "::error::argument-multiple-lines-wo-newline case seems to be broken"
+            status=1
+          fi
+
+          if [[ "${{ steps.actions-core.outputs.multiple-lines-wo-newline }}" == "${{ steps.toolkit.outputs.pipe-multiple-lines-wo-newline }}" ]]; then
+            echo "pipe-multiple-lines-wo-newline works"
+          else
+            echo "::error::pipe-multiple-lines-wo-newline case seems to be broken"
+            status=1
+          fi
+          
+          echo "::set-output name=status::${status:-0}"
+      - run: |
+          if ((${{ steps.single-line.outputs.status }} + ${{ steps.single-line-wo-newline.outputs.status }} + ${{ steps.multiple-lines.outputs.status }} + ${{ steps.multiple-lines-wo-newline.outputs.status }})); then
+            exit 1
+          fi
+        shell: bash

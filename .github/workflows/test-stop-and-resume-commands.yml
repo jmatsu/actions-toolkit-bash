@@ -1,0 +1,36 @@
+name: 'test stop-commands and resume-commands command'
+on:
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-stop-and-resume-commands.yml'
+      - 'src/*-commands'
+      - 'src/gh_actions_command'
+
+jobs:
+  stop-and-resume-commands:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "$PWD/src" >> $GITHUB_PATH
+      - run: echo "::error::You can see this error message"
+      - run: stop-commands "StopToken1"
+      - run: |
+          echo "Can you see the warning and/or error message below? If yes, stop-commands is broken"
+          echo "::warning::warn1"
+          echo "::error::error1"
+      - run: resume-commands "StopToken1"
+      - run: echo "::error::You can see this error message again"
+      - run: echo "StopToken2" | stop-commands
+      - run: |
+          echo "Can you see the warning and/or error message below? If yes, stop-commands is broken"
+          echo "::warning::warn2"
+          echo "::error::error2"
+      - run: echo "StopToken2" | resume-commands
+      - run: echo "::error::You can see this error message again"
+

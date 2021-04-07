@@ -1,0 +1,28 @@
+name: 'actions-core-behavior'
+description: 'to compare values'
+author: 'jmatsu'
+inputs:
+  single_line_file_path:
+    required: true
+    description: "omit"
+  single_line_wo_newline_file_path:
+    required: true
+    description: "omit"
+  multiple_lines_file_path:
+    required: true
+    description: "omit"
+  multiple_lines_wo_newline_file_path:
+    required: true
+    description: "omit"
+outputs:
+  single-line:
+    description: 'a string that ends with EOL'
+  single-line-wo-newline:
+    description: 'a string that does not end with EOL'
+  multiple-lines:
+    description: 'a content of multiple_lines_txt'
+  multiple-lines-wo-newline:
+    description: 'a content of multiple_lines_wo_newline_txt'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

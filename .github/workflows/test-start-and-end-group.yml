@@ -1,0 +1,29 @@
+name: 'test start and end group commands'
+on:
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-start-and-end-group.yml'
+      - 'src/*-group'
+      - 'src/gh_actions_command'
+
+jobs:
+
+  grouping:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "$PWD/src" >> $GITHUB_PATH
+      - run: |
+          start-group "Group1"
+          echo "Hello Group1"
+          end-group
+
+          echo "Group w/ pipe" | start-group
+          echo "Group w/ pipe"
+          end-group

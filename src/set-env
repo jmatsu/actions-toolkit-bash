@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ "${ACTIONS_TOOLKIT_DEBUG:-}" == "true" ]]; then
+  set -x
+fi
+
+if (($# < 1)); then
+  exec log-debug "$0 requires 1st argument that is the env name"
+fi
+
+readonly name="$1"; shift 1
+
+echo "$name<<___ACTIONS_TOOLKIT_DELIMITER" >> $GITHUB_ENV
+
+if (($# == 0)); then
+  cat - >> $GITHUB_ENV
+  echo >> $GITHUB_ENV
+else
+  echo -n "$*" >> $GITHUB_ENV
+  echo >> $GITHUB_ENV
+fi
+
+echo "___ACTIONS_TOOLKIT_DELIMITER" >> $GITHUB_ENV

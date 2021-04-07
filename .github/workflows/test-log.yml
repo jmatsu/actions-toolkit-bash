@@ -1,0 +1,32 @@
+name: 'test log command'
+on:
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-log.yml'
+      - 'src/log-*'
+      - 'src/gh_actions_command'
+
+jobs:
+  log:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "$PWD/src" >> $GITHUB_PATH
+      - run: |
+          log-debug "Hello debug"
+          log-debug Hello debug w/o quated
+          echo "Hello debug w/ pipe" | log-debug
+      - run: |
+          log-warning "Hello warning"
+          log-warning Hello warning w/o quated
+          echo "Hello warning w/ pipe" | log-warning
+      - run: |
+          log-error "Hello error"
+          log-error Hello error w/o quated
+          echo "Hello error w/ pipe" | log-error

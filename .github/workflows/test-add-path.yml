@@ -1,0 +1,21 @@
+name: 'test add-path command'
+on:
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-add-path.yml'
+      - 'src/add-path'
+      - '.github/bin/verify_executable_commands.bash'
+
+jobs:
+  add-path:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./src/add-path "$PWD/src"
+      - run: .github/bin/verify_executable_commands.bash

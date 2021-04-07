@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ "${ACTIONS_TOOLKIT_DEBUG:-}" == "true" ]]; then
+  set -x
+fi
+
+if (($# == 0)); then
+  exec cat - >> $GITHUB_PATH
+else
+  exec echo "$*" >> $GITHUB_PATH
+fi

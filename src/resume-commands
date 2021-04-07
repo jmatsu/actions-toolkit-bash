@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ "${ACTIONS_TOOLKIT_DEBUG:-}" == "true" ]]; then
+  set -x
+fi
+
+if (($# == 0)); then
+  export GH_COMMAND_NAME="$(cat -)"
+else
+  export GH_COMMAND_NAME="$*"
+fi
+
+exec gh_actions_command <<< ""

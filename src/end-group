@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ "${ACTIONS_TOOLKIT_DEBUG:-}" == "true" ]]; then
+  set -x
+fi
+
+export GH_COMMAND_NAME="endgroup"
+
+exec gh_actions_command <<< ""

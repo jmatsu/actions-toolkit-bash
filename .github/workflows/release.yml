@@ -1,0 +1,34 @@
+name: 'release this action'
+on:
+  push:
+    tags:
+      - \d+.\d+.\d+
+
+jobs:
+  precond:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir -p artifacts && tar -zcvf artifacts/toolkit-scripts.tar.gz -C src .
+      - uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: artifacts
+  package:
+    runs-on: ubuntu-latest
+    needs: [precond]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifacts
+          path: artifacts
+      - run: |
+          ls -Ra artifacts
+          curl -sL "https://raw.githubusercontent.com/jmatsu/transart/master/install.bash" | bash
+          ./transart upload
+        working-directory: artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          echo "::warning::Complete the release by publishing the release"
+          echo "::warning::Tweak setup action to use this version"

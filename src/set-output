@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ "${ACTIONS_TOOLKIT_DEBUG:-}" == "true" ]]; then
+  set -x
+fi
+
+if (($# < 1)); then
+  exec log-debug "$0 requires 1st argument that is the output name"
+fi
+
+export GH_COMMAND_NAME="set-output"
+export name___GH_PROPERTIES="$1"; shift 1
+
+if (($# == 0)); then
+  exec cat - | gh_actions_command
+else
+  echo -n "$*" | exec gh_actions_command
+fi
