@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - 'jmatsu-patch-*'
     tags:
       - \d+.\d+.\d+
   pull_request:
