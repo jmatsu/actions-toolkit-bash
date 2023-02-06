@@ -58,14 +58,14 @@ jobs:
             status=1
           fi
 
-          if [[ "${{ steps.actions-core.outputs.single-line }}" == "${{ steps.toolkit.outputs.argument-eol-single-line }}" ]]; then
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.single-line }}")" == "${{ steps.toolkit.outputs.argument-eol-single-line }}" ]]; then
             echo "argument-eol-single-line works"
           else
             echo "::error::argument-eol-single-line case seems to be broken"
             status=1
           fi
 
-          if [[ "$(echo -n "${{ steps.actions-core.outputs.single-line }}")" == "${{ steps.toolkit.outputs.pipe-single-line }}" ]]; then
+          if [[ "${{ steps.actions-core.outputs.single-line }}" == "${{ steps.toolkit.outputs.pipe-single-line }}" ]]; then
             echo "pipe-single-line works"
           else
             echo "::error::pipe-single-line case seems to be broken"
@@ -108,14 +108,14 @@ jobs:
             status=1
           fi
 
-          if [[ "${{ steps.actions-core.outputs.multiple-lines }}" == "${{ steps.toolkit.outputs.argument-eol-multiple-lines }}" ]]; then
+          if [[ "$(echo -n "${{ steps.actions-core.outputs.multiple-lines }}")" == "${{ steps.toolkit.outputs.argument-eol-multiple-lines }}" ]]; then
             echo "argument-eol-multiple-lines works"
           else
             echo "::error::argument-eol-multiple-lines case seems to be broken"
             status=1
           fi
 
-          if [[ "$(echo -n "${{ steps.actions-core.outputs.multiple-lines }}")" == "${{ steps.toolkit.outputs.pipe-multiple-lines }}" ]]; then
+          if [[ "${{ steps.actions-core.outputs.multiple-lines }}" == "${{ steps.toolkit.outputs.pipe-multiple-lines }}" ]]; then
             echo "pipe-multiple-lines works"
           else
             echo "::error::pipe-multiple-lines case seems to be broken"
