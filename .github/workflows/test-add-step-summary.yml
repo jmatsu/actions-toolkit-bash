@@ -10,7 +10,6 @@ on:
     paths:
       - '.github/workflows/test-add-step-summary.yml'
       - 'src/add-step-summary'
-      - '.github/bin/verify_executable_commands.bash'
 
 jobs:
   add-step-summary:
@@ -23,4 +22,3 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: ./src/add-step-summary "$PWD/src"
-      - run: .github/bin/verify_executable_commands.bash

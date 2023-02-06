@@ -3,6 +3,7 @@
 set -ex
 
 which add-path
+which add-step-summary
 which end-group
 which gh_actions_command
 which log-debug

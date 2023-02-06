@@ -79,7 +79,7 @@ jobs:
             status=1
           fi
 
-          echo "::set-output name=status::${status:-0}"
+          echo "status=${status:-0}" >> $GITHUB_OUTPUT
       - name: single-line-wo-newline
         id: single-line-wo-newline
         run: |
@@ -97,7 +97,7 @@ jobs:
             status=1
           fi
 
-          echo "::set-output name=status::${status:-0}"
+          echo "status=${status:-0}" >> $GITHUB_OUTPUT
       - name: multiple-lines
         id: multiple-lines
         run: |
@@ -129,7 +129,7 @@ jobs:
             status=1
           fi
 
-          echo "::set-output name=status::${status:-0}"
+          echo "status=${status:-0}" >> $GITHUB_OUTPUT
       - name: multiple-lines-wo-newline
         id: multiple-lines-wo-newline
         run: |
@@ -147,7 +147,7 @@ jobs:
             status=1
           fi
           
-          echo "::set-output name=status::${status:-0}"
+          echo "status=${status:-0}" >> $GITHUB_OUTPUT
       - run: |
           if ((${{ steps.single-line.outputs.status }} + ${{ steps.single-line-wo-newline.outputs.status }} + ${{ steps.multiple-lines.outputs.status }} + ${{ steps.multiple-lines-wo-newline.outputs.status }})); then
             exit 1
