@@ -1,0 +1,26 @@
+name: 'test add-step-summary command'
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - \d+.\d+.\d+
+  pull_request:
+    types: ['opened', 'synchronize', 'ready_for_review']
+    paths:
+      - '.github/workflows/test-add-step-summary.yml'
+      - 'src/add-step-summary'
+      - '.github/bin/verify_executable_commands.bash'
+
+jobs:
+  add-step-summary:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      ACTIONS_TOOLKIT_DEBUG: true
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./src/add-step-summary "$PWD/src"
+      - run: .github/bin/verify_executable_commands.bash
