@@ -10,11 +10,16 @@ if (($# < 1)); then
   exec log-debug "$0 requires 1st argument that is the output name"
 fi
 
-export GH_COMMAND_NAME="set-output"
-export name___GH_PROPERTIES="$1"; shift 1
+readonly name="$1"; shift 1
+
+echo "$name<<___ACTIONS_TOOLKIT_DELIMITER" >> "$GITHUB_OUTPUT"
 
 if (($# == 0)); then
-  exec cat - | gh_actions_command
+  cat - >> "$GITHUB_OUTPUT"
+  echo >> "$GITHUB_OUTPUT"
 else
-  echo -n "$*" | exec gh_actions_command
+  echo -n "$*" >> "$GITHUB_OUTPUT"
+  echo >> "$GITHUB_OUTPUT"
 fi
+
+echo "___ACTIONS_TOOLKIT_DELIMITER" >> "$GITHUB_OUTPUT"
